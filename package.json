@@ -1,0 +1,29 @@
+{
+    "name": "NGSI-LD Query",
+    "author": "fdelavega",
+    "version": "0.1",
+    "module": "ngsi_query.NGSIQuery",
+    "media_types": ["application/ld+json"],
+    "formats": ["URL"],
+    "overrides": [],
+    "pull_accounting": true,
+    "form": {
+        "entities": {
+            "type": "text",
+            "label": "Entities",
+            "placeholder": "Vehicle,Parking",
+            "mandatory": true
+        },
+        "service": {
+            "type": "text",
+            "label": "NGSI-LD Tenant",
+            "placeholder": "tenant"
+        },
+        "role": {
+            "type": "text",
+            "label": "Acquisition Role",
+            "placeholder": "customer",
+            "mandatory": true
+        }
+    }
+}

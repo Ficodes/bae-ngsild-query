@@ -34,6 +34,10 @@ from keyrock_client import KeyrockClient
 
 #from settings import UNITS
 
+UNITS = [{
+    'name': 'Api call',
+    'description': 'The final price is calculated based on the number of calls made to the API'
+}]
 APP_ID = '75177139-e929-42ac-b99f-d8fff29bb56c'
 
 
@@ -41,7 +45,7 @@ class NGSIQuery(Plugin):
 
     def __init__(self, plugin_model):
         super(NGSIQuery, self).__init__(plugin_model)
-        # self._units = UNITS
+        self._units = UNITS
 
     def on_post_product_spec_validation(self, provider, asset):
         asset.meta_info['app_id'] = APP_ID

@@ -51,3 +51,9 @@ class NGSIQuery(Plugin):
         # Activate API resources
         client = KeyrockClient()
         client.grant_permission(asset.meta_info['app_id'], order.customer, asset.meta_info['role'])
+
+    def get_usage_specs(self):
+        return self._units
+
+    def get_pending_accounting(self, asset, contract, order):
+        return []

@@ -96,7 +96,7 @@ class KeyrockClient(object):
         role_id = self.check_role(app_id, role)
         assign_url = IDM_URL + '/v1/applications/{}/users/{}/roles/{}'.format(app_id, user.username, role_id)
 
-        resp = requests.put(assign_url, headers={
+        resp = requests.post(assign_url, headers={
             'X-Auth-Token': self._auth_token,
             'Content-Type': 'application/json'
         }, verify=django_settings.VERIFY_REQUESTS)

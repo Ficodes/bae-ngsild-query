@@ -22,6 +22,7 @@ from __future__ import unicode_literals
 
 import requests
 from urlparse import urlparse, urljoin
+from os import environ
 
 from django.conf import settings as django_settings
 
@@ -38,7 +39,7 @@ UNITS = [{
     'name': 'Api call',
     'description': 'The final price is calculated based on the number of calls made to the API'
 }]
-APP_ID = '75177139-e929-42ac-b99f-d8fff29bb56c'
+APP_ID = environ.get('BAE_CONTEXT_APP', '75177139-e929-42ac-b99f-d8fff29bb56c')
 
 
 class NGSIQuery(Plugin):
@@ -55,6 +56,10 @@ class NGSIQuery(Plugin):
         # Activate API resources
         client = KeyrockClient()
         client.grant_permission(asset.meta_info['app_id'], order.customer, asset.meta_info['role'])
+
+    def on_product_suspension(self, asset, contract, order):
+        client = KeyrockClient()
+        client.revoke_permission(asset.meta_info['app_id'], order.customer, asset.meta_info['role'])
 
     def get_usage_specs(self):
         return self._units

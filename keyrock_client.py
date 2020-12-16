@@ -91,6 +91,33 @@ class KeyrockClient(object):
 
         return role_id
 
+    def create_role(self, app_id, role_name):
+        path = '/v1/applications/{}/roles'.format(app_id)
+        roles_url = IDM_URL + path
+
+        role_body = {
+            "role": {
+                "name": role_name
+            }
+        }
+
+        resp = requests.post(roles_url, headers={
+            'X-Auth-Token': self._auth_token
+        }, json=role_body, verify=django_settings.VERIFY_REQUESTS)
+
+        resp.raise_for_status()
+
+    def check_app(self, app_id):
+        path = '/v1/applications/{}'.format(app_id)
+        app_url = IDM_URL + path
+
+        resp = requests.get(app_url, headers={
+            'X-Auth-Token': self._auth_token
+        }, verify=django_settings.VERIFY_REQUESTS)
+
+        if resp.status_code != 200:
+            raise PluginError('The provided app id is not registered in Keyrock')
+
     def grant_permission(self, app_id, user, role):
         # Get ids
         role_id = self.check_role(app_id, role)

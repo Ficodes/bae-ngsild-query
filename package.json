@@ -8,6 +8,18 @@
     "overrides": [],
     "pull_accounting": true,
     "form": {
+        "app_id": {
+            "type": "text",
+            "label": "Application ID",
+            "placeholder": "app_id",
+            "mandatory": true
+        },
+        "role": {
+            "type": "text",
+            "label": "Acquisition Role",
+            "placeholder": "customer",
+            "mandatory": true
+        },
         "entities": {
             "type": "text",
             "label": "Entities",
@@ -18,12 +30,6 @@
             "type": "text",
             "label": "NGSI-LD Tenant",
             "placeholder": "tenant"
-        },
-        "role": {
-            "type": "text",
-            "label": "Acquisition Role",
-            "placeholder": "customer",
-            "mandatory": true
         }
     }
 }

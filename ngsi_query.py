@@ -20,15 +20,7 @@
 
 from __future__ import unicode_literals
 
-import requests
-from urlparse import urlparse, urljoin
-from os import environ
-
-from django.conf import settings as django_settings
-
 from wstore.asset_manager.resource_plugins.plugin import Plugin
-from wstore.asset_manager.resource_plugins.plugin_error import PluginError
-from wstore.models import User
 
 from keyrock_client import KeyrockClient
 # from umbrella_client import UmbrellaClient
@@ -39,7 +31,6 @@ UNITS = [{
     'name': 'Api call',
     'description': 'The final price is calculated based on the number of calls made to the API'
 }]
-APP_ID = environ.get('BAE_CONTEXT_APP', '75177139-e929-42ac-b99f-d8fff29bb56c')
 
 
 class NGSIQuery(Plugin):
@@ -49,20 +40,35 @@ class NGSIQuery(Plugin):
         self._units = UNITS
 
     def on_post_product_spec_validation(self, provider, asset):
-        asset.meta_info['app_id'] = APP_ID
-        asset.save()
+        # Check app ID is valid
+        client = KeyrockClient()
+        client.check_app(asset.meta_info['app_id'])
+
+        # Check role
+        admin_role = asset.meta_info['role'] + '.admin'
+
+        try:
+            client.check_role(asset.meta_info['app_id'], admin_role)
+        except:
+            # The roles does not exists so we create it
+            client.create_role(asset.meta_info['app_id'], admin_role)
 
     def on_product_acquisition(self, asset, contract, order):
         # Activate API resources
         client = KeyrockClient()
-        client.grant_permission(asset.meta_info['app_id'], order.customer, asset.meta_info['role'])
+        admin_role = asset.meta_info['role'] + '.admin'
+        client.grant_permission(asset.meta_info['app_id'], order.customer, admin_role)
 
     def on_product_suspension(self, asset, contract, order):
         client = KeyrockClient()
-        client.revoke_permission(asset.meta_info['app_id'], order.customer, asset.meta_info['role'])
+        admin_role = asset.meta_info['role'] + '.admin'
+        client.revoke_permission(asset.meta_info['app_id'], order.customer, admin_role)
 
     def get_usage_specs(self):
         return self._units
 
     def get_pending_accounting(self, asset, contract, order):
         return []
+
+if __name__ == "__main__":
+    pass
